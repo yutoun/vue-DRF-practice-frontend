@@ -1,58 +1,93 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+<div class="hello">
+    <v-row
+      align="center"
+      justify="space-around"
+      class="mt-10 mb-10"
+    >
+      <v-btn
+        depressed
+        color="primary"
+        @click="getUserList"
+      >
+        show lists
+      </v-btn>
+    </v-row>
+    <v-simple-table v-if="button_clicked">
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">
+              Title
+            </th>
+            <th class="text-left">
+              contents
+            </th>
+            <th class="text-left">
+              created_at
+            </th>
+            <th class="text-left">
+              status
+            </th>
+            <th class="text-left">
+              author
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="item in lists"
+            :key="item.title"
+          >
+            <td>{{ item.title }}</td>
+            <td>{{ item.body }}</td>
+            <td>{{ item.created_at }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.author }}</td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
   </div>
 </template>
 
 <script>
+import axiosBase from 'axios'
+
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
+  data () {
+    return {
+      lists: null,
+      button_clicked: false,
+    }
+  },
+  methods: {
+    getUserList: function () {
+      const axios = axiosBase.create(this.$axiosCreate)
+      axios.get('http://127.0.0.1:8000/v1/api/entries/')
+      .then(response => (this.lists = response.data.results))
+      .catch((error)=> {
+        console.log(error);
+        console.log('omg!error!')
+      })
+      .finally(()=> {
+        console.log('final')
+        this.button_clicked=true
+      });
+    },
   }
 }
-</script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+</script>
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+  .button{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 30px;
+  }
 </style>
+
+
+
+
+
