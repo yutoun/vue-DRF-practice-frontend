@@ -8,9 +8,9 @@
       <v-btn
         depressed
         color="primary"
-        @click="getUserList"
+        @click="buttonClicked"
       >
-        show lists
+        {{ message }}
       </v-btn>
     </v-row>
     <v-simple-table v-if="button_clicked">
@@ -60,6 +60,7 @@ export default {
     return {
       lists: null,
       button_clicked: false,
+      message: "show lists"
     }
   },
   methods: {
@@ -73,9 +74,17 @@ export default {
       })
       .finally(()=> {
         console.log('final')
-        this.button_clicked=true
       });
     },
+    buttonClicked:function () {
+      this.button_clicked= !this.button_clicked
+      if (this.button_clicked){
+        this.message = "hide lists"
+      }else{
+        this.message = "show lists"
+      }
+      this.getUserList()
+    }
   }
 }
 
