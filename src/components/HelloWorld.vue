@@ -44,6 +44,13 @@
               <v-row>
                 <v-col cols="12">
                   <v-text-field
+                    label="article_id*"
+                    required
+                    v-model="article_id"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
                     label="title*"
                     required
                     v-model="title"
@@ -100,6 +107,9 @@
         <thead>
           <tr>
             <th class="text-left">
+              id
+            </th>
+            <th class="text-left">
               Title
             </th>
             <th class="text-left">
@@ -121,6 +131,7 @@
             v-for="item in lists"
             :key="item.title"
           >
+            <td>{{ item.article_id }}</td>
             <td>{{ item.title }}</td>
             <td>{{ item.body }}</td>
             <td>{{ item.created_at }}</td>
@@ -144,6 +155,7 @@ export default {
       button_clicked: false,
       message: "show lists",
       dialog: false,
+      article_id: '',
       title: '',
       body: '',
       status: '',
@@ -169,6 +181,7 @@ export default {
     postEntryList: function () {
       const axios = axiosBase.create(this.$axiosCreate)
       const postData={
+        "article_id": this.article_id,
         "title": this.title,
         "body": this.body,
         "created_at": "2021-09-10T03:51:34.369147Z",
@@ -185,7 +198,8 @@ export default {
       })
       .finally(() => {
         this.getEntryList()
-        this.buttonClicked()
+        this.button_clicked= true
+        this.message = "show lists"
       })
     },
     buttonClicked:function () {
